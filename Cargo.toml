@@ -12,6 +12,7 @@ members = [
     # Include upstream reth binary to support `make build` and standard CI workflows.
     # This ensures that `cargo build --bin reth` can resolve the target.
     "bin/reth",
+    "crates/engine/local",
     "crates/optimism/bin/op-reth",
     "crates/optimism/bin/proof-bench",
     "crates/optimism/cli",
@@ -207,7 +208,7 @@ reth-dns-discovery = { git = "https://github.com/paradigmxyz/reth", tag = "v1.10
 reth-downloaders = { git = "https://github.com/paradigmxyz/reth", tag = "v1.10.2" }
 reth-e2e-test-utils = { git = "https://github.com/paradigmxyz/reth", tag = "v1.10.2" }
 reth-ecies = { git = "https://github.com/paradigmxyz/reth", tag = "v1.10.2" }
-reth-engine-local = { git = "https://github.com/paradigmxyz/reth", tag = "v1.10.2" }
+reth-engine-local = { path = "crates/engine/local" }
 reth-engine-primitives = { git = "https://github.com/paradigmxyz/reth", tag = "v1.10.2", default-features = false }
 reth-engine-tree = { git = "https://github.com/paradigmxyz/reth", tag = "v1.10.2" }
 reth-engine-service = { git = "https://github.com/paradigmxyz/reth", tag = "v1.10.2" }

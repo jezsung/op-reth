@@ -66,14 +66,17 @@ impl<ChainSpec>
     PayloadAttributesBuilder<op_alloy_rpc_types_engine::OpPayloadAttributes, ChainSpec::Header>
     for LocalPayloadAttributesBuilder<ChainSpec>
 where
-    ChainSpec: EthChainSpec + EthereumHardforks + 'static,
+    ChainSpec: EthChainSpec + EthereumHardforks + reth_optimism_chainspec::OpHardforks + 'static,
 {
     fn build(
         &self,
         parent: &SealedHeader<ChainSpec::Header>,
     ) -> op_alloy_rpc_types_engine::OpPayloadAttributes {
+        let payload_attributes: EthPayloadAttributes = self.build(parent);
+        let timestamp = payload_attributes.timestamp;
+
         op_alloy_rpc_types_engine::OpPayloadAttributes {
-            payload_attributes: self.build(parent),
+            payload_attributes,
             // Add dummy system transaction
             transactions: Some(vec![
                 reth_optimism_chainspec::constants::TX_SET_L1_BLOCK_OP_MAINNET_BLOCK_124665056
@@ -81,8 +84,14 @@ where
             ]),
             no_tx_pool: None,
             gas_limit: None,
-            eip_1559_params: None,
-            min_base_fee: None,
+            eip_1559_params: self
+                .chain_spec
+                .is_holocene_active_at_timestamp(timestamp)
+                .then_some(alloy_primitives::B64::ZERO),
+            min_base_fee: self
+                .chain_spec
+                .is_jovian_active_at_timestamp(timestamp)
+                .then_some(1),
         }
     }
 }
